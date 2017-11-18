@@ -10,6 +10,7 @@
 /build
 .requirements.zip
 .serverless
+config.json
 
 # misc
 .DS_Store
