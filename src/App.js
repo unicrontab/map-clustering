@@ -11,12 +11,18 @@ import Footer from './Footer';
 import Intro from './Intro';
 import AddressInput from './AddressInput';
 import Map from './Map';
+import ParsedAddresses from './ParsedAddresses';
+import Errors from './Errors';
+import config from './config';
+
+const googleMapURL = `https://maps.googleapis.com/maps/api/js?key=${config.GMapClientSideKey}&v=3.exp&libraries=geometry,drawing,places`;
 
 class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
             addresses: [],
+            mapCenter: { lat: 37.332, lng: -122.030 },
         };
         this.handleAddressChange = addresses => {
             this.setState({ addresses });
@@ -31,8 +37,11 @@ class App extends Component {
                     <Intro />
                     <ParsedAddresses addresses={this.state.addresses} />
                     <AddressInput onAddressChange={this.handleAddressChange} />
+                    <Errors addresses={this.state.addresses} />
                     <Map
-                        googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4R6AN7SmujjPUIGKdyao2Kqitzr1kiRg&v=3.exp&libraries=geometry,drawing,places"
+                        addresses={this.state.addresses}
+                        mapCenter={this.state.mapCenter}
+                        googleMapURL={googleMapURL}
                         loadingElement={<div style={{ height: '100%' }} />}
                         containerElement={<div style={{ height: '800px' }} />}
                         mapElement={<div style={{ height: '100%' }} />}

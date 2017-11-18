@@ -1,36 +1,47 @@
 /* eslint-disable class-methods-use-this */
+/* global google */
 
 import React from 'react';
 import {
     withScriptjs,
     withGoogleMap,
     GoogleMap,
-    Marker,
 } from 'react-google-maps';
+import { MarkerWithLabel } from 'react-google-maps/lib/components/addons/MarkerWithLabel';
+import { primary, white } from './theme';
 
-const createMarkersFromAddresses = addresses => addresses.map(address => (
-    <Marker
-        position={ address }
-        key={`${address.lat},{address.lng}`}
-    />));
+const createMarkersFromAddresses = addresses => addresses.map(address => {
+    if (address.error) return null;
+    const position = address.results[0].geometry.location;
+    const coordinates = `${position.lat}, ${position.lng}`;
+    const formattedAddress = address.results[0].formatted_address;
+
+    console.log(address);
+    return (
+        <MarkerWithLabel
+            position={position}
+            key={coordinates}
+            labelAnchor={new google.maps.Point(-5, 10)}
+            labelStyle={{ 
+                backgroundColor: primary,
+                opacity: '0.8',
+                color: white,
+                padding: '0.5rem',
+            }}>
+            <div>{formattedAddress}</div>
+        </MarkerWithLabel>
+    );
+});
 
 class Map extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            addresses: [
-                { lat: -34.397, lng: 150.644 },
-                { lat: -35.397, lng: 149.644 },
-            ],
-        };
-    }
     render() {
+        console.log(this.props.addresses);
         return (
             <GoogleMap
-                defaultZoom={8}
-                defaultCenter={{ lat: -34.397, lng: 150.644 }}
+                defaultZoom={10}
+                defaultCenter={this.props.mapCenter}
             >
-                {createMarkersFromAddresses(this.state.addresses)}
+                {createMarkersFromAddresses(this.props.addresses)}
             </GoogleMap>
         );
     }
