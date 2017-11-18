@@ -1,0 +1,59 @@
+{
+    "service": "map-cluster",
+    "frameworkVersion": ">=1.1.0 <2.0.0",
+    "package": {
+        "exclude": [
+            "node_modules/**",
+            "venv/**",
+            ".vscode/**",
+            "__pycache__/**",
+            "package*.json",
+            "README.md",
+            "test/**",
+            "buildspec.yml",
+            "requirements.txt",
+            ".requirements-cache"
+        ]
+    },
+    "plugins": [
+        "serverless-webpack"
+    ],
+    "custom": {
+        "pythonRequirements": {
+            "zip": true,
+            "dockerizePip": true,
+            "noDeploy": [
+                "boto3"
+            ],
+            "pipCmdExtraArgs": [
+                "--cache-dir",
+                ".requirements-cache"
+            ]
+        },
+        "webpackIncludeModules": true
+    },
+    "provider": {
+        "name": "aws",
+        "stage": "dev",
+        "region": "us-west-2"
+    },
+    "functions": {
+        "addressLookup": {
+            "runtime": "nodejs6.10",
+            "timeout": 30,
+            "handler": "addressLookup.main",
+            "environment": {
+                "APIKEY": "${file(./config.json):GMapAPIKey}"
+            },
+            "events": [
+                {
+                    "http": {
+                        "path": "addressLookup/",
+                        "method": "post",
+                        "cors": "false"
+                    }
+                }
+            ]
+        }
+    }
+}

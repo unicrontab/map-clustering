@@ -1,0 +1,19 @@
+.Intro {
+    text-align: center;
+    padding: 5rem 0rem;
+    font-weight: normal;
+    letter-spacing: 4px;
+}
+
+.intro-title {    
+    margin: 4rem 0rem 1rem 0rem;
+    width: 100%;
+    font-size: 3rem;
+}
+
+.intro-subtitle {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: lighter;
+    letter-spacing: 1px;
+}

@@ -1,0 +1,6 @@
+.addressInputContainer {
+    padding: 2rem;
+    display: grid;
+    grid-gap: 10px;
+}
+
