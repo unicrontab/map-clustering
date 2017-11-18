@@ -10,9 +10,9 @@
 /build
 .requirements.zip
 .serverless
-config.json
 
 # misc
+config.json
 .DS_Store
 .vscode
 .env.local

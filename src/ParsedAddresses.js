@@ -6,6 +6,7 @@ import { primary, secondary, white } from './theme';
 import ContentSend from 'material-ui/svg-icons/content/send';
 
 const createAddressListing = addresses => addresses.map(address => {
+    if (address.error) return null;
     const location = address.results[0].geometry.location;
     const coordinates = `${location.lat}, ${location.lng}`;
 
@@ -23,13 +24,13 @@ const createAddressListing = addresses => addresses.map(address => {
 
 class ParsedAddresses extends React.Component {
     render() {
-        if (!this.props.addresses) return(<div />);
+        if (!this.props.addresses) return null;
         return (
             <List style={{ backgroundColor: primary }}>
                 {createAddressListing(this.props.addresses)}
             </List>
         );
     }
-};
+}
 
 export default ParsedAddresses;
