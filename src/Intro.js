@@ -8,10 +8,8 @@ class Intro extends React.Component {
     render() {
         return (
             <div className="Intro" style={{ backgroundColor: primary }}>
-                <div className="intro-title"> Map Cluster </div>
-                <div className="intro-subtitle">
-                    Intelligently organize and group addresses
-                </div>
+                <div className="intro-title">{this.props.title}</div>
+                <div className="intro-subtitle">{this.props.subtitle}</div>
             </div>
         );
     }

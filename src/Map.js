@@ -8,7 +8,8 @@ import {
     GoogleMap,
 } from 'react-google-maps';
 import { MarkerWithLabel } from 'react-google-maps/lib/components/addons/MarkerWithLabel';
-import { black, clusterColors } from './theme';
+import { white, clusterColors } from './theme';
+import mapStyle from './mapStyle';
 
 const createMarkersFromAddresses = addresses => addresses.map(address => {
     if (address.error) return null;
@@ -18,15 +19,24 @@ const createMarkersFromAddresses = addresses => addresses.map(address => {
     };
     const coordinates = `${position.lat}, ${position.lng}`;
     const formattedAddress = address.address;
+
+    const icon = {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 14,
+        fillColor: clusterColors[address.cluster],
+        strokeColor: clusterColors[address.cluster],
+        strokeWeight: 8,
+    };
+
     return (
         <MarkerWithLabel
             position={position}
             key={coordinates}
-            labelAnchor={new google.maps.Point(-5, 10)}
+            labelAnchor={new google.maps.Point(-10, 12)}
+            icon={icon}
             labelStyle={{
-                backgroundColor: clusterColors[address.cluster],
-                opacity: '0.8',
-                color: black,
+                opacity: '0.5',
+                color: white,
                 padding: '0.5rem',
             }}>
             <div>{formattedAddress}</div>
@@ -38,7 +48,8 @@ class Map extends React.Component {
     render() {
         return (
             <GoogleMap
-                defaultZoom={10}
+                defaultOptions={{ styles: mapStyle }}
+                defaultZoom={9}
                 defaultCenter={this.props.mapCenter}
             >
                 {createMarkersFromAddresses(this.props.addresses)}

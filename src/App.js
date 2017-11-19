@@ -6,12 +6,14 @@ import './App.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import { white } from './theme';
+import { white, primary } from './theme';
 import Footer from './Footer';
 import Intro from './Intro';
 import AddressInput from './AddressInput';
 import Map from './Map';
 import ParsedAddresses from './ParsedAddresses';
+import LoadingIndicator from './LoadingIndicator';
+import HelperList from './HelperList';
 import Errors from './Errors';
 import config from './config';
 
@@ -24,11 +26,19 @@ class App extends Component {
             clusters: 2,
             addresses: [],
             mapCenter: { lat: 37.332, lng: -122.030 },
+            errors: [],
+            loading: false,
         };
         this.handleAddressChange = addresses => {
-            this.setState({ clusters: addresses.clusters });
             this.setState({ addresses: addresses.clusterData });
         };
+        this.handleErrors = errors => {
+            this.setState({ loading: false });
+            this.setState({ errors });
+        };
+        this.handleLoading = isLoading => {
+            this.setState({ loading: isLoading });
+        }
     }
 
     render() {
@@ -36,10 +46,20 @@ class App extends Component {
             <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
                 <div className='App'
                     style={{ color: white }}>
-                    <Intro />
-                    <ParsedAddresses addresses={this.state.addresses} />
-                    <AddressInput onAddressChange={this.handleAddressChange} />
-                    <Errors addresses={this.state.addresses} />
+                    <Intro
+                        title='Map Cluster'
+                        subtitle='Intelligently organize and group addresses using unsupervised machine learning'
+                    />
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', backgroundColor: primary }}>
+                        <AddressInput
+                        onAddressChange={this.handleAddressChange}
+                        handleErrors={this.handleErrors}
+                        handleLoading={this.handleLoading} />
+                        <HelperList addresses={this.state.addresses} />
+                        <LoadingIndicator loading={this.state.loading} />
+                        <ParsedAddresses addresses={this.state.addresses} />
+                    </div>
+                    <Errors errors={this.state.errors} />
                     <Map
                         addresses={this.state.addresses}
                         mapCenter={this.state.mapCenter}
