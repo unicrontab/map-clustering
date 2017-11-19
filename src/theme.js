@@ -6,12 +6,12 @@ import {
     grey900,
     red900,
     redA100,
-    blue200,
-    green200,
-    orange200,
-    brown200,
-    red200,
-    indigo200,
+    cyanA200,
+    greenA200,
+    orangeA200,
+    brownA200,
+    redA200,
+    indigoA200,
 } from 'material-ui/styles/colors';
 
 export const primary = teal800;
@@ -23,10 +23,10 @@ export const errorPrimary = red900;
 export const errorSecondary = redA100;
 
 export const clusterColors = [
-    blue200,
-    green200,
-    orange200,
-    brown200,
-    red200,
-    indigo200,
+    cyanA200,
+    redA200,
+    indigoA200,
+    greenA200,
+    orangeA200,
+    brownA200,
 ];

@@ -26,7 +26,6 @@ class App extends Component {
             mapCenter: { lat: 37.332, lng: -122.030 },
         };
         this.handleAddressChange = addresses => {
-            this.setState({ clusters: addresses.clusters });
             this.setState({ addresses: addresses.clusterData });
         };
     }
@@ -36,9 +35,14 @@ class App extends Component {
             <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
                 <div className='App'
                     style={{ color: white }}>
-                    <Intro />
-                    <ParsedAddresses addresses={this.state.addresses} />
-                    <AddressInput onAddressChange={this.handleAddressChange} />
+                    <Intro
+                        title='Map Cluster'
+                        subtitle='Intelligently organize and group addresses using unsupervised machine learning'
+                    />
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+                        <AddressInput onAddressChange={this.handleAddressChange} />
+                        <ParsedAddresses addresses={this.state.addresses} />
+                    </div>
                     <Errors addresses={this.state.addresses} />
                     <Map
                         addresses={this.state.addresses}

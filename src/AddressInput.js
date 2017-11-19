@@ -5,6 +5,8 @@ import config from './config';
 import { primary } from './theme';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 
 const defaultAddresses = config.defaultAddresses;
 
@@ -19,11 +21,21 @@ class AddressInput extends React.Component {
         super(props);
         this.state = {
             addresses: defaultAddresses,
+            algo: 'kmeans',
+            clusters: 3,
         };
     }
 
     handleChange = (event) => {
         this.setState({ addresses: event.target.value });
+    }
+
+    setAlgo = (event, index, value) => {
+        this.setState({ algo: value });
+    }
+
+    setClusters = (event, index, value) => {
+        this.setState({ clusters: value });
     }
 
     validate = () => {
@@ -37,7 +49,8 @@ class AddressInput extends React.Component {
             },
         }).then(response => {
             const clusterRequest = {
-                algo: 'k_means',
+                algo: this.state.algo,
+                clusters: this.state.clusters,
                 data: response.map(prepareClusterRequest),
             };
             api({
@@ -61,20 +74,45 @@ class AddressInput extends React.Component {
                     defaultValue={defaultAddresses}
                     floatingLabelText="Enter one address per line"
                     floatingLabelFixed={true}
-                    rows={10}
+                    rows={20}
                     value={ addresses }
                     onChange={this.handleChange}
                     id="addressInput"
                     style={{
-                        width: '33%',
+                        width: '100%',
+                        gridRow: 'span 1',
+                        gridColumn: 'span 2',
                     }}>
                 </TextField>
+
+                <SelectField
+                    floatingLabelText='Clustering Algorithm'
+                    value={this.state.algo}
+                    onChange={this.setAlgo}
+                    style={{ gridRow: 2 }}>
+                    <MenuItem value='kmeans' primaryText='K Means' />
+                    <MenuItem value='spectral' primaryText='Spectral Clustering' />
+                </SelectField>
+
+                <SelectField
+                    floatingLabelText='Number of clusters'
+                    value={this.state.clusters}
+                    onChange={this.setClusters}
+                    style={{ gridRow: 2 }}>
+                    <MenuItem value={1} primaryText='1' />
+                    <MenuItem value={2} primaryText='2' />
+                    <MenuItem value={3} primaryText='3' />
+                    <MenuItem value={4} primaryText='4' />
+                    <MenuItem value={5} primaryText='5' />
+                    <MenuItem value={6} primaryText='6' />
+                </SelectField>
 
                 <RaisedButton
                     default={ true }
                     onClick={ this.validate }
                     label='Cluster Addresses'
-                    style={{ gridRow: 2 }}>
+                    style={{ gridRow: 4 }}
+                >
                 </RaisedButton>
 
             </div>

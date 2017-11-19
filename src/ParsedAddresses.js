@@ -3,7 +3,7 @@ import React from 'react';
 import './ParsedAddresses.css';
 import { List, ListItem } from 'material-ui/List';
 import { primary, white, clusterColors } from './theme';
-import ContentSend from 'material-ui/svg-icons/content/send';
+import Explore from 'material-ui/svg-icons/action/explore';
 
 const createAddressListing = addresses => addresses.map(address => {
     if (address.error) return null;
@@ -19,8 +19,9 @@ const createAddressListing = addresses => addresses.map(address => {
             primaryText={formattedAddress}
             secondaryText={coordinates}
             key={formattedAddress}
-            leftIcon={<ContentSend color={clusterColors[cluster]}/>}
-            style={{ color: white }}
+            leftIcon={<Explore color={clusterColors[cluster]}/>}
+            style={{ color: white, padding: '0px !important' }}
+            innerDivStyle={{ padding: '8px 10px 8px 50px' }}
         />
     );
 });
