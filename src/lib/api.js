@@ -1,13 +1,14 @@
 import config from '../config';
 
 export default async function api({
+    url = config.api.URL,
     path,
     method = 'GET',
     headers = {},
     queryParams = {},
     body,
 }) {
-    const results = await fetch(config.api.URL + path, {
+    const results = await fetch(url + path, {
         method,
         headers,
         body: body ? JSON.stringify(body) : body,

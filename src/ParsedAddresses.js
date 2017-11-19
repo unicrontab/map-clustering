@@ -2,21 +2,24 @@
 import React from 'react';
 import './ParsedAddresses.css';
 import { List, ListItem } from 'material-ui/List';
-import { primary, secondary, white } from './theme';
+import { primary, white, clusterColors } from './theme';
 import ContentSend from 'material-ui/svg-icons/content/send';
 
 const createAddressListing = addresses => addresses.map(address => {
     if (address.error) return null;
-    const location = address.results[0].geometry.location;
+    const location = {
+        lat: address.lat,
+        lng: address.lng,
+    };
     const coordinates = `${location.lat}, ${location.lng}`;
-
-    const formattedAddress = address.results[0].formatted_address;
+    const cluster = address.cluster;
+    const formattedAddress = address.address;
     return (
         <ListItem
             primaryText={formattedAddress}
             secondaryText={coordinates}
-            key={address.results['0'].place_id}
-            leftIcon={<ContentSend color={secondary}/>}
+            key={formattedAddress}
+            leftIcon={<ContentSend color={clusterColors[cluster]}/>}
             style={{ color: white }}
         />
     );

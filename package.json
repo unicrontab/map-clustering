@@ -14,7 +14,6 @@
     "react-scripts": "1.0.17",
     "serverless": "^1.24.1",
     "serverless-external-s3-event": "^1.0.9",
-    "serverless-python-requirements": "^3.0.9",
     "serverless-webpack": "^4.0.0"
   },
   "scripts": {

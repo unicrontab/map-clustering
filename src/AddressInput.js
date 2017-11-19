@@ -1,11 +1,18 @@
 import React from 'react';
 import './AddressInput.css';
 import api from './lib/api';
+import config from './config';
 import { primary } from './theme';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
-const defaultAddresses = 'One Infinite Loop Cupertino, CA 95014\n100 Winchester Circle Los Gatos, CA 95032';
+const defaultAddresses = config.defaultAddresses;
+
+const prepareClusterRequest = geoData => ({
+    address: geoData.results[0].formatted_address,
+    location: geoData.results[0].geometry.location,
+});
+
 
 class AddressInput extends React.Component {
     constructor(props) {
@@ -19,16 +26,28 @@ class AddressInput extends React.Component {
         this.setState({ addresses: event.target.value });
     }
 
-    handleClick = () => {
+    validate = () => {
         const addressArray = this.state.addresses.split('\n');
         api({
+            url: config.api.URL,
             path: '/dev/addressLookup',
             method: 'POST',
             body: {
                 addresses: addressArray,
             },
         }).then(response => {
-            this.props.onAddressChange(response);
+            const clusterRequest = {
+                algo: 'k_means',
+                data: response.map(prepareClusterRequest),
+            };
+            api({
+                url: config.api.CLUSTER,
+                path: '/dev/cluster',
+                method: 'POST',
+                body: clusterRequest,
+            }).then(clusterResponse => {
+                this.props.onAddressChange(clusterResponse);
+            });
         });
     }
 
@@ -53,10 +72,11 @@ class AddressInput extends React.Component {
 
                 <RaisedButton
                     default={ true }
-                    onClick={ this.handleClick }
-                    label='cluster'
+                    onClick={ this.validate }
+                    label='Cluster Addresses'
                     style={{ gridRow: 2 }}>
                 </RaisedButton>
+
             </div>
         );
     }

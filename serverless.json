@@ -1,35 +1,10 @@
 {
     "service": "map-cluster",
     "frameworkVersion": ">=1.1.0 <2.0.0",
-    "package": {
-        "exclude": [
-            "node_modules/**",
-            "venv/**",
-            ".vscode/**",
-            "__pycache__/**",
-            "package*.json",
-            "README.md",
-            "test/**",
-            "buildspec.yml",
-            "requirements.txt",
-            ".requirements-cache"
-        ]
-    },
     "plugins": [
         "serverless-webpack"
     ],
     "custom": {
-        "pythonRequirements": {
-            "zip": true,
-            "dockerizePip": true,
-            "noDeploy": [
-                "boto3"
-            ],
-            "pipCmdExtraArgs": [
-                "--cache-dir",
-                ".requirements-cache"
-            ]
-        },
         "webpackIncludeModules": true
     },
     "provider": {

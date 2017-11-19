@@ -21,11 +21,13 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            clusters: 2,
             addresses: [],
             mapCenter: { lat: 37.332, lng: -122.030 },
         };
         this.handleAddressChange = addresses => {
-            this.setState({ addresses });
+            this.setState({ clusters: addresses.clusters });
+            this.setState({ addresses: addresses.clusterData });
         };
     }
 
