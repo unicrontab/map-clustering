@@ -1,13 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { shallow } from 'enzyme';
 import Intro from './Intro';
+import { shallow } from 'enzyme';
 
 test('Render the Intro', () => {
     const testTitle = 'Test Title';
     const testSubtitle = 'Test Subtitle';
-    const introWrapper = shallow(
-        <Intro title='testTitle' subtitle='testSubTitle' />
+    const introComponent = shallow(
+        <Intro title={testTitle} subtitle={testSubtitle} />
     );
-    expect(introWrapper.prop('title').toEqual(testTitle));
+    expect(introComponent.instance().props.title).toEqual(testTitle);
+    expect(introComponent.instance().props.subtitle).toEqual(testSubtitle);    
 });

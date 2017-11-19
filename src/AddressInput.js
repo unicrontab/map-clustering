@@ -15,6 +15,19 @@ const prepareClusterRequest = geoData => ({
     location: geoData.results[0].geometry.location,
 });
 
+const removeErrors = (geoData, errorHandler) => {
+    const errors = geoData.filter(data => data.error);
+    const validGeoData = geoData.filter(data => !data.error);
+    if (errors) errorHandler(errors);
+    return validGeoData;
+};
+
+const checkModelConstraints = (state, addresses) => {
+    if (state.clusters > addresses.length) return 'Must have at least one cluster per address.';
+    if (state.algo === 'spectral' && addresses.length < 10) return 'Must have at least 10 addresses for spectral clustering.';
+    return false;
+};
+
 
 class AddressInput extends React.Component {
     constructor(props) {
@@ -38,30 +51,41 @@ class AddressInput extends React.Component {
         this.setState({ clusters: value });
     }
 
+
     validate = () => {
-        const addressArray = this.state.addresses.split('\n');
-        api({
-            url: config.api.URL,
-            path: '/dev/addressLookup',
-            method: 'POST',
-            body: {
-                addresses: addressArray,
-            },
-        }).then(response => {
-            const clusterRequest = {
-                algo: this.state.algo,
-                clusters: this.state.clusters,
-                data: response.map(prepareClusterRequest),
-            };
-            api({
-                url: config.api.CLUSTER,
-                path: '/dev/cluster',
+        const splitAddresses = this.state.addresses.split('\n');
+        const addressArray = splitAddresses.filter(address => address ? true : false);
+        const inputError = checkModelConstraints(this.state, addressArray);
+        if (!inputError) {
+            this.props.handleLoading(true);
+            setTimeout(api({
+                url: config.api.URL,
+                path: '/dev/addressLookup',
                 method: 'POST',
-                body: clusterRequest,
-            }).then(clusterResponse => {
-                this.props.onAddressChange(clusterResponse);
-            });
-        });
+                body: {
+                    addresses: addressArray,
+                },
+            }).then(response => {
+                const data = removeErrors(response, this.props.handleErrors);
+                const clusterRequest = {
+                    algo: this.state.algo,
+                    clusters: this.state.clusters,
+                    data: data.map(prepareClusterRequest),
+                };
+                api({
+                    url: config.api.CLUSTER,
+                    path: '/dev/cluster',
+                    method: 'POST',
+                    body: clusterRequest,
+                }).then(clusterResponse => {
+                    this.props.handleLoading(false);
+                    this.props.onAddressChange(clusterResponse);
+                });
+            }), 3000);
+        } else {
+            this.props.handleErrors([{ error: 'Model Error', detail: { status: inputError }}]);
+        }
+        
     }
 
     render() {
@@ -91,7 +115,12 @@ class AddressInput extends React.Component {
                     onChange={this.setAlgo}
                     style={{ gridRow: 2 }}>
                     <MenuItem value='kmeans' primaryText='K Means' />
-                    <MenuItem value='spectral' primaryText='Spectral Clustering' />
+                    <MenuItem value='minikmeans' primaryText='Mini Batch K Means' />
+                    <MenuItem value='meanshift' primaryText='Spectral Clustering' />
+                    <MenuItem value='affinity' primaryText='Affinity Propogation' />
+                    <MenuItem value='agglo' primaryText='Agglomerative Clustering' />
+                    <MenuItem value='birch' primaryText='Birch Clustering' />
+                    <MenuItem value='gaussian' primaryText='Gaussian Mixture' />
                 </SelectField>
 
                 <SelectField
