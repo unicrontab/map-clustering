@@ -1,5 +1,9 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
+# sensitive
+config.json
+src/config.js
+
 # dependencies
 /node_modules
 
@@ -12,7 +16,6 @@
 .serverless
 
 # misc
-config.json
 .DS_Store
 .vscode
 .env.local
