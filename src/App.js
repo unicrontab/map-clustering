@@ -44,30 +44,31 @@ class App extends Component {
     render() {
         return (
             <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
-                <div className='App'
-                    style={{ color: white }}>
+                <div className='App' style={{ color: white}}>
                     <Intro
                         title='Map Cluster'
                         subtitle='Intelligently organize and group addresses using unsupervised machine learning'
                     />
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', backgroundColor: primary }}>
+                    <div style={{ gridArea: 'input', display: 'grid', gridTemplateColumns: '1fr 1fr', backgroundColor: primary }}>
                         <AddressInput
                         onAddressChange={this.handleAddressChange}
                         handleErrors={this.handleErrors}
                         handleLoading={this.handleLoading} />
                         <HelperList addresses={this.state.addresses} />
-                        <LoadingIndicator loading={this.state.loading} />
                         <ParsedAddresses addresses={this.state.addresses} />
+                        <LoadingIndicator loading={this.state.loading } />
                     </div>
                     <Errors errors={this.state.errors} />
-                    <Map
-                        addresses={this.state.addresses}
-                        mapCenter={this.state.mapCenter}
-                        googleMapURL={googleMapURL}
-                        loadingElement={<div style={{ height: '100%' }} />}
-                        containerElement={<div style={{ height: '800px' }} />}
-                        mapElement={<div style={{ height: '100%' }} />}
-                    />
+                    <div className='Map'>
+                        <Map
+                            addresses={this.state.addresses}
+                            mapCenter={this.state.mapCenter}
+                            googleMapURL={googleMapURL}
+                            loadingElement={<div style={{ height: '100%' }} />}
+                            containerElement={<div style={{ height: '800px' }} />}
+                            mapElement={<div style={{ height: '100%' }} />}
+                        />
+                    </div>
                     <Footer />
                 </div>
             </MuiThemeProvider>

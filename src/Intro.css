@@ -3,6 +3,7 @@
     padding: 5rem 0rem;
     font-weight: normal;
     letter-spacing: 4px;
+    grid-area: intro;
 }
 
 .intro-title {    

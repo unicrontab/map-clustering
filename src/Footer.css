@@ -1,5 +1,9 @@
 .footer {
     margin: 0px;
+    grid-area: footer;
+}
+
+.footerContent {
     padding: 2rem;
 }
 
