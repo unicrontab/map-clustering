@@ -3,8 +3,8 @@ import { primary, primaryDark } from './theme';
 import './Footer.css';
 
 const Footer = () =>
-    <div>
-        <div className="footer" style={{ backgroundColor: primary }}>
+    <div className='footer' style={{ backgroundColor: primary }}>
+        <div className='footerContent'>
             <h5> How does this work? </h5>
             <p>
                 Using unsupervised machine learning methods,

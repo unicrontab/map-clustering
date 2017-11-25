@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 /* global google */
-
+import './Map.css';
 import React from 'react';
 import {
     withScriptjs,

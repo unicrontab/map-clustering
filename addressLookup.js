@@ -18,7 +18,7 @@ const getLatLong = async address => {
     if (!response.results) return { error: 'no results' };
     if (!response.results[0]) return { error: 'issue with request', detail: response };
     return response;
-};
+}; 
 
 const getLocationsFromAddresses = addresses => {
     const locationPromises = addresses.map(getLatLong);
