@@ -30,15 +30,14 @@ class App extends Component {
             loading: false,
         };
         this.handleAddressChange = addresses => {
-            this.setState({ addresses: addresses.clusterData });
+            this.setState({ 
+                addresses: addresses.clusterData,
+                errors: [],
+            });
         };
         this.handleErrors = errors => {
-            this.setState({ loading: false });
-            this.setState({ errors });
+            this.setState({ errors, });
         };
-        this.handleLoading = isLoading => {
-            this.setState({ loading: isLoading });
-        }
     }
 
     render() {
@@ -47,16 +46,15 @@ class App extends Component {
                 <div className='App' style={{ color: white}}>
                     <Intro
                         title='Map Cluster'
-                        subtitle='Intelligently organize and group addresses using unsupervised machine learning'
+                        subtitle='Cluster addresses using unsupervised machine learning'
                     />
                     <div style={{ gridArea: 'input', display: 'grid', gridTemplateColumns: '1fr 1fr', backgroundColor: primary }}>
                         <AddressInput
-                        onAddressChange={this.handleAddressChange}
-                        handleErrors={this.handleErrors}
-                        handleLoading={this.handleLoading} />
+                            onAddressChange={this.handleAddressChange}
+                            handleErrors={this.handleErrors}
+                            handleLoading={this.handleLoading} />
                         <HelperList addresses={this.state.addresses} />
                         <ParsedAddresses addresses={this.state.addresses} />
-                        <LoadingIndicator loading={this.state.loading } />
                     </div>
                     <Errors errors={this.state.errors} />
                     <div className='Map'>

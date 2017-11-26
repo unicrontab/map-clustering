@@ -7,6 +7,7 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import LoadingIndicator from './LoadingIndicator';
 
 const defaultAddresses = config.defaultAddresses;
 
@@ -18,7 +19,7 @@ const prepareClusterRequest = geoData => ({
 const removeErrors = (geoData, errorHandler) => {
     const errors = geoData.filter(data => data.error);
     const validGeoData = geoData.filter(data => !data.error);
-    if (errors) errorHandler(errors);
+    if (errors.length) errorHandler(errors);
     return validGeoData;
 };
 
@@ -28,11 +29,32 @@ const checkModelConstraints = (state, addresses) => {
     return false;
 };
 
+const lookupAddresses = (addressArray) => api({
+    url: config.api.URL,
+    path: '/dev/addressLookup',
+    method: 'POST',
+    body: {
+        addresses: addressArray,
+    },
+});
+
+const clusterAddresses = (clusterRequest) => api({
+    url: config.api.CLUSTER,
+    path: '/dev/cluster',
+    method: 'POST',
+    body: clusterRequest,
+});
+
+const createMenuItems = count => [...Array(count)].map((value, index) => {
+    return <MenuItem key={index+1} value={index+1} primaryText={index+1} />;
+});
+
 
 class AddressInput extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            loading: false,
             addresses: defaultAddresses,
             algo: 'kmeans',
             clusters: 3,
@@ -51,37 +73,29 @@ class AddressInput extends React.Component {
         this.setState({ clusters: value });
     }
 
+    handleLoading = isLoading => {
+        this.setState({ loading: isLoading });
+    }
+
 
     validate = () => {
         const splitAddresses = this.state.addresses.split('\n');
         const addressArray = splitAddresses.filter(address => address ? true : false);
         const inputError = checkModelConstraints(this.state, addressArray);
         if (!inputError) {
-            this.props.handleLoading(true);
-            setTimeout(api({
-                url: config.api.URL,
-                path: '/dev/addressLookup',
-                method: 'POST',
-                body: {
-                    addresses: addressArray,
-                },
-            }).then(response => {
+            this.handleLoading(true);
+            lookupAddresses(addressArray).then(response => {
                 const data = removeErrors(response, this.props.handleErrors);
                 const clusterRequest = {
                     algo: this.state.algo,
                     clusters: this.state.clusters,
                     data: data.map(prepareClusterRequest),
                 };
-                api({
-                    url: config.api.CLUSTER,
-                    path: '/dev/cluster',
-                    method: 'POST',
-                    body: clusterRequest,
-                }).then(clusterResponse => {
-                    this.props.handleLoading(false);
+                clusterAddresses(clusterRequest).then(clusterResponse => {
+                    this.handleLoading(false);
                     this.props.onAddressChange(clusterResponse);
                 });
-            }), 3000);
+            });
         } else {
             this.props.handleErrors([{ error: 'Model Error', detail: { status: inputError }}]);
         }
@@ -128,21 +142,19 @@ class AddressInput extends React.Component {
                     value={this.state.clusters}
                     onChange={this.setClusters}
                     style={{ gridRow: 2 }}>
-                    <MenuItem value={1} primaryText='1' />
-                    <MenuItem value={2} primaryText='2' />
-                    <MenuItem value={3} primaryText='3' />
-                    <MenuItem value={4} primaryText='4' />
-                    <MenuItem value={5} primaryText='5' />
-                    <MenuItem value={6} primaryText='6' />
+                    {createMenuItems(6)}
                 </SelectField>
-
-                <RaisedButton
-                    default={ true }
-                    onClick={ this.validate }
-                    label='Cluster Addresses'
-                    style={{ gridRow: 4 }}
-                >
-                </RaisedButton>
+                <div style={{ gridRow: 3 }}>
+                    <RaisedButton
+                        default={ true }
+                        onClick={ this.validate }
+                        label='Cluster Addresses'
+                    >
+                    </RaisedButton>
+                </div>
+                <LoadingIndicator 
+                    style={{ gridRow: 3 }}
+                    loading={this.state.loading} />
 
             </div>
         );

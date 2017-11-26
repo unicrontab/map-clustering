@@ -1,13 +1,14 @@
 import React from 'react';
-import CircularProgress from 'material-ui/CircularProgress';
+import LinearProgress from 'material-ui/LinearProgress';
 import './LoadingIndicator.css';
 
 const LoadingIndicator = props => {
+    const style = props.style || {};
     if (!props.loading) return null;
     console.log('loading props', props.loading);
     return(
-        <div>
-            <CircularProgress className='loadingIndicator' size={80} thinkness={8} />
+        <div style={style}>
+            <LinearProgress className='loadingIndicator' mode='indeterminate' />
         </div>
     );
 };

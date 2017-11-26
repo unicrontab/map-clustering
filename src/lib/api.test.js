@@ -11,7 +11,7 @@ const failure = { status: 500, text: () => 'error'};
 const response = (url, {method, headers, body }) => new Promise((resolve, reject) => {
     if (url === 'test/success') resolve(success);
     if (url === config.api.URL + '/success') resolve(urlSuccess);
-    if (url === 'test/failure') reject(failure);
+    if (url === 'test/failure') resolve(failure);
 });
 
 
@@ -45,9 +45,11 @@ test('API makes valid requests without body', async () => {
     expect(response.success).toBeTruthy();
 });
 
-// test('API handles non 200 responses', async () => {
-//     expect(await api({
-//         url: 'test',
-//         path: '/failure',        
-//     })).toThrow();
-// });
+test('API handles non 200 responses', async () => {
+    const badResponse = api({
+        url: 'test',
+        path: '/failure',        
+    });
+    expect(badResponse).rejects.toHaveProperty('message','error');
+    
+});
