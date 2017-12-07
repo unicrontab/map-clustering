@@ -1,15 +1,15 @@
 const defaultAddressRaw = [
     'One Infinite Loop Cupertino, CA 95014',
     '100 Winchester Circle Los Gatos, CA 95032',
-    'Boulder Creek',
-    'Butano State Park',
-    'Memorial County Park',
-    'Half Moon Bay',
-    'El Granada',
-    'Pacifica',
-    'Palo Alto',
-    'Madrone',
-    'Henry W. Coe State Park',
+    'Boulder Creek, CA',
+    'Butano State Park, CA',
+    'Memorial County Park, CA',
+    'Half Moon Bay, CA',
+    'El Granada, CA',
+    'Pacifica, CA',
+    'Palo Alto, CA',
+    'Madrone, CA',
+    'Henry W. Coe State Park, CA',
 ];
 
 export default {
